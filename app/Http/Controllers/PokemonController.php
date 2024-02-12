@@ -99,7 +99,7 @@ class PokemonController extends Controller
                 file_get_contents($pokemon->image_url), 
                 Response::HTTP_OK, 
                 [
-                    'Content-Type' => File::type($pokemon->image_url),
+                    'Content-Type' => File::mimeType($pokemon->image_url),
                 ],       
         );
     }
