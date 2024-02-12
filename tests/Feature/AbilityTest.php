@@ -91,9 +91,9 @@ class AbilityTest extends TestCase
 
     public function test_destroy_ability(): void
     {
-        $abilty = Ability::inRandomOrder()->first();
+        $ability = Ability::inRandomOrder()->first();
 
-        $response = $this->deleteJson(route('ability.destroy', $abilty->id));
+        $response = $this->deleteJson(route('ability.destroy', $ability->id));
         $response->assertNoContent();
     }
 }

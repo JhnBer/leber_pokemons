@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->string('name', 32);
             $table->string('name_ru', 32);
-            $table->string('image_url', 64);
+            $table->string('image_url', 128);
 
             $table->timestamps();
         });
