@@ -6,6 +6,7 @@ use App\Http\Requests\StoreAbilityRequest;
 use App\Http\Requests\UpdateAbilityRequest;
 use App\Models\Ability;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
 use Symfony\Component\HttpFoundation\Response;
 
 class AbilityController extends Controller
@@ -15,7 +16,11 @@ class AbilityController extends Controller
      */
     public function index()
     {
-        $abilities = Ability::all();
+        $abilities = QueryBuilder::for(Ability::class)
+            ->allowedFilters(['name', 'name_ru'])
+            ->allowedSorts(['id', 'name', 'name_ru'])
+            ->get();
+
         return response()->json($abilities, Response::HTTP_OK);
     }
 
