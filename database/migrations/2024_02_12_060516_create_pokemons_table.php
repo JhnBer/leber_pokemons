@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\PokemonShapes;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +16,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('name', 32)->unique();
-            $table->string('shape', 16);
+            $table->enum('shape', PokemonShapes::array());
             $table->integer('order');
             $table->string('image_url', 64);
             $table->integer('location_id');
