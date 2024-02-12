@@ -17,7 +17,7 @@ return new class extends Migration
 
             $table->string('name', 32)->unique();
             $table->enum('shape', PokemonShapes::array());
-            $table->integer('order');
+            $table->integer('order')->nullable();
             $table->string('image_url', 64);
             $table->integer('location_id');
 

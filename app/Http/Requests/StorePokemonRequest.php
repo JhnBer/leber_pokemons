@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\PokemonShapes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StorePokemonRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class StorePokemonRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +24,12 @@ class StorePokemonRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', 'min:3', 'max:32', 'unique:pokemons,name'],
+            'shape' => ['required', 'string', Rule::in(PokemonShapes::array())],
+            'location_id' => ['required', 'integer', Rule::exists('locations', 'id')],
+            'abilities' => ['required', 'array'],
+            'abilities.*' => ['required', 'integer', Rule::exists('abilities', 'id')],
+            'image' => ['required', 'image', 'mimes:png,jpg,jpeg'],
         ];
     }
 }

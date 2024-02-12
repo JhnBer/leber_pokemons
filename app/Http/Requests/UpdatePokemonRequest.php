@@ -11,7 +11,7 @@ class UpdatePokemonRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,12 @@ class UpdatePokemonRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['string', 'min:3', 'max:32', 'unique:pokemons,name'],
+            'shape' => ['string', Rule::in(PokemonShapes::array())],
+            'location_id' => ['integer', Rule::exists('locations', 'id')],
+            'abilities' => ['array'],
+            'abilities.*' => ['integer', Rule::exists('abilities', 'id')],
+            'image' => ['image', 'mimes:png,jpg,jpeg'],
         ];
     }
 }
