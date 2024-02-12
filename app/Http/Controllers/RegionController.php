@@ -6,6 +6,8 @@ use App\Http\Requests\StoreRegionRequest;
 use App\Http\Requests\UpdateRegionRequest;
 use App\Models\Region;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class RegionController extends Controller
 {
@@ -14,7 +16,12 @@ class RegionController extends Controller
      */
     public function index()
     {
-        //
+        $regions = QueryBuilder::for(Region::class)
+            ->allowedFilters(['name'])
+            ->allowedSorts(['id', 'name'])
+            ->get();
+
+        return response()->json($regions, Response::HTTP_OK);
     }
 
     /**
@@ -22,7 +29,12 @@ class RegionController extends Controller
      */
     public function store(StoreRegionRequest $request)
     {
-        //
+        if(Region::where('name', $request->name)->exists()){
+            return response()->json(['message' => 'Already exists'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $region = Region::create($request->validated());
+        return response()->json($region, Response::HTTP_CREATED);
     }
 
     /**
@@ -30,7 +42,7 @@ class RegionController extends Controller
      */
     public function show(Region $region)
     {
-        //
+        return response()->json($region, Response::HTTP_OK);
     }
 
     /**
@@ -38,7 +50,12 @@ class RegionController extends Controller
      */
     public function update(UpdateRegionRequest $request, Region $region)
     {
-        //
+        if(Region::where('name', $request->name)->exists()){
+            return response()->json(['message' => 'Already exists'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $region->update($request->validated());
+        return response()->json($region, Response::HTTP_OK);
     }
 
     /**
@@ -46,6 +63,7 @@ class RegionController extends Controller
      */
     public function destroy(Region $region)
     {
-        //
+        $region->delete();
+        return response()->noContent();
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\Regions;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreRegionRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class StoreRegionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +24,7 @@ class StoreRegionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', 'min:4', 'max:32', Rule::in(Regions::array())],
         ];
     }
 }

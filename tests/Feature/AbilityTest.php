@@ -24,7 +24,6 @@ class AbilityTest extends TestCase
     
     public function test_create_ability(): void
     {
-
         $data = [
             'name' => $this->faker->realText(mt_rand(10, 32)),
             'name_ru' => $this->ruFaker->realText(mt_rand(10, 32)),
