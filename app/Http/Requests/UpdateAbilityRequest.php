@@ -11,7 +11,7 @@ class UpdateAbilityRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class UpdateAbilityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['string', 'min:4', 'max:32'],
+            'name_ru' => ['string', 'min:4', 'max:32'],
+            'image' => ['image', 'mimes:png,jpg,jpeg'], 
         ];
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Requests\StoreAbilityRequest;
 use App\Http\Requests\UpdateAbilityRequest;
 use App\Models\Ability;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class AbilityController extends Controller
 {
@@ -14,7 +15,8 @@ class AbilityController extends Controller
      */
     public function index()
     {
-        //
+        $abilities = Ability::all();
+        return response()->json($abilities, Response::HTTP_OK);
     }
 
     /**
@@ -22,7 +24,16 @@ class AbilityController extends Controller
      */
     public function store(StoreAbilityRequest $request)
     {
-        //
+
+        $validated = $request->validated();
+
+        $file = $request->file('image');
+        $filePath = $file->move(public_path('images'), $file->getClientOriginalName());
+        $validated['image_url'] = $filePath;
+
+        $ability = Ability::create($validated);
+
+        return response()->json($ability, Response::HTTP_CREATED);
     }
 
     /**
@@ -30,7 +41,7 @@ class AbilityController extends Controller
      */
     public function show(Ability $ability)
     {
-        //
+        return response()->json($ability, Response::HTTP_OK);
     }
 
     /**
@@ -38,7 +49,16 @@ class AbilityController extends Controller
      */
     public function update(UpdateAbilityRequest $request, Ability $ability)
     {
-        //
+        $validated = $request->validated();
+
+        if($request->hasFile('image')){
+            $file = $request->file('image');
+            $filePath = $file->move(public_path('images'), $file->getClientOriginalName());
+            $validated['image_url'] = $filePath;
+        }
+
+        $ability->update($validated);
+        return response($ability, Response::HTTP_OK);
     }
 
     /**
@@ -46,6 +66,7 @@ class AbilityController extends Controller
      */
     public function destroy(Ability $ability)
     {
-        //
+        $ability->delete();
+        return response()->noContent();
     }
 }
