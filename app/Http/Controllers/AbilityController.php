@@ -76,4 +76,22 @@ class AbilityController extends Controller
         $ability->delete();
         return response()->noContent();
     }
+
+    /**
+     * 
+     *  */ 
+    public function getImage(Ability $ability)
+    {
+        if(!File::exists($ability->image_url)){
+            return response()->json(['message' => 'Image not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        return response(
+                file_get_contents($ability->image_url), 
+                Response::HTTP_OK, 
+                [
+                    'Content-Type' => File::type($ability->image_url),
+                ],       
+        );
+    }
 }

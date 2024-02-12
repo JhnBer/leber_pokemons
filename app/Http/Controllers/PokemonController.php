@@ -85,4 +85,22 @@ class PokemonController extends Controller
         $pokemon->delete();
         return response()->noContent();
     }
+
+    /**
+     * Return pokemon's image
+     */
+    public function getImage(Pokemon $pokemon)
+    {
+        if(!File::exists($pokemon->image_url)){
+            return response()->json(['message' => 'Image not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        return response(
+                file_get_contents($pokemon->image_url), 
+                Response::HTTP_OK, 
+                [
+                    'Content-Type' => File::type($pokemon->image_url),
+                ],       
+        );
+    }
 }
