@@ -6,6 +6,7 @@ use App\Http\Requests\StoreLocationRequest;
 use App\Http\Requests\UpdateLocationRequest;
 use App\Models\Location;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,8 +20,14 @@ class LocationController extends Controller
     {
         $regions = QueryBuilder::for(Location::class)
             ->with('region')
+            ->join('regions', 'regions.id', '=', 'locations.region_id')
+            ->select('locations.name as location_name')
+            ->select('locations.*')
             ->allowedFilters(['region.name'])
-            ->allowedSorts(['name'])
+            ->allowedSorts([
+                'name', 
+                AllowedSort::field('region', 'regions.name')
+                ])
             ->get();
 
         return response()->json($regions, Response::HTTP_OK);
