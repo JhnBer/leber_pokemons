@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\PokemonShapes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdatePokemonRequest extends FormRequest
 {
