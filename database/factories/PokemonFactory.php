@@ -52,4 +52,19 @@ class PokemonFactory extends Factory
             $pokemon->abilities()->attach($abilities);
         });
     }
+
+    public function withOrder()
+    {
+        return $this->state(function (array $attributes){
+            return [
+                'name' => $attributes['name'],
+                'shape' => $attributes['shape'],
+                'location_id' => $attributes['location_id'],
+                'image_url' => $attributes['image_url'],
+            ];
+        })->afterCreating(function (Pokemon $pokemon) {
+            $pokemon->order = $pokemon->id;
+            $pokemon->save();
+        });
+    }
 }

@@ -30,6 +30,9 @@ class DatabaseSeeder extends Seeder
         Location::factory(5)->withParent()->create(); 
         Location::factory(5)->withParent()->create();
 
-        Pokemon::factory(10)->withAbilities()->create();
+        Pokemon::factory(10)
+            ->withOrder()
+            ->withAbilities()
+            ->create();
     }
 }
