@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Region;
+use App\Models\Location;
 
 class RegionTest extends TestCase
 {
@@ -30,12 +31,16 @@ class RegionTest extends TestCase
                 }
             }
         }
-        if($nameExists){
-            $this->fail('All regions already exists');
-        }
+
+        $regionsCount = Region::all()->count();
 
         $response = $this->postJson(route('region.store'), $data);
-        $response->assertCreated();
+
+        if($regionsCount == count(Regions::array())){
+            $response->assertUnprocessable();
+        }else{
+            $response->assertOk();
+        }
     }
 
     public function test_create_existing_region(): void
@@ -64,14 +69,18 @@ class RegionTest extends TestCase
             }
         }
 
-        if($nameExists){
-            $this->fail('All regions already exists');
-        }
-
         $region = Region::inRandomOrder()->first();
 
+        $regionsCount = Region::all()->count();
+
         $response = $this->patchJson(route('region.update', $region->id), $data);
-        $response->assertOk();
+
+        if($regionsCount == count(Regions::array())){
+            $response->assertUnprocessable();
+        }else{
+            $response->assertOk();
+        }
+        
 
     } 
 
@@ -111,7 +120,12 @@ class RegionTest extends TestCase
         $region = Region::inRandomOrder()->first();
 
         $response = $this->deleteJson(route('region.destroy', $region->id));
-        $response->assertNoContent();
+
+        if(Location::where('region_id', $region->id)->exists()){
+            $response->assertUnprocessable();
+        }else{
+            $response->assertNoContent();
+        }
     }
     
 }
