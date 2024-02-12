@@ -6,6 +6,9 @@ use App\Http\Requests\StoreLocationRequest;
 use App\Http\Requests\UpdateLocationRequest;
 use App\Models\Location;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
+use Symfony\Component\HttpFoundation\Response;
+
 
 class LocationController extends Controller
 {
@@ -14,7 +17,13 @@ class LocationController extends Controller
      */
     public function index()
     {
-        //
+        $regions = QueryBuilder::for(Location::class)
+            ->with('region')
+            ->allowedFilters(['region.name'])
+            ->allowedSorts(['name'])
+            ->get();
+
+        return response()->json($regions, Response::HTTP_OK);
     }
 
     /**
@@ -22,7 +31,13 @@ class LocationController extends Controller
      */
     public function store(StoreLocationRequest $request)
     {
-        //
+        $validated = $request->validated();
+        if(isset($validated['parent_id'])){
+            $parentLocation = Location::where('id', $validated['parent_id'])->first();
+            $validated['region_id'] = $parentLocation->region_id;
+        }
+        $location = Location::create($validated);
+        return response($location, Response::HTTP_CREATED);
     }
 
     /**
@@ -30,7 +45,7 @@ class LocationController extends Controller
      */
     public function show(Location $location)
     {
-        //
+        return response()->json($location, Response::HTTP_OK);
     }
 
     /**
@@ -38,7 +53,15 @@ class LocationController extends Controller
      */
     public function update(UpdateLocationRequest $request, Location $location)
     {
-        //
+        $validated = $request->validated();
+        if(isset($validated['parent_id'])){
+            $parentLocation = Location::where('id', $validated['parent_id'])->first();
+            if($parentLocation->region_id !== $location->region_id){
+                $validated['region_id'] = $parentLocation->region_id;
+            }
+        }
+        $location->update($validated);
+        return response()->json($location, Response::HTTP_OK);
     }
 
     /**
@@ -46,6 +69,11 @@ class LocationController extends Controller
      */
     public function destroy(Location $location)
     {
-        //
+        if(Location::where('parent_id', $location->id)->exists()){
+            return response()->json(['message' => 'This location used as parent location'], Response::HTTP_CONFLICT);
+        }
+        
+        $location->delete();
+        return response()->noContent();
     }
 }
