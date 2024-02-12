@@ -13,49 +13,80 @@ class RegionTest extends TestCase
     use WithFaker;
     // use RefreshDatabase;
 
-    public function test_create_region(): void
+    public function test_create_new_region(): void
+    {
+        $regions = Regions::array();
+        $data = [
+            'name' => $this->faker->randomElement($regions),
+        ];
+        
+        $nameExists = Region::where('name', $data['name'])->exists();
+        if($nameExists){
+            foreach ($regions as $region) {
+                if(Region::where('name', $region)->doesntExist()){
+                    $data['name'] = $region;
+                    $nameExists = false;
+                    break;
+                }
+            }
+        }
+        if($nameExists){
+            $this->fail('All regions already exists');
+        }
+
+        $response = $this->postJson(route('region.store'), $data);
+        $response->assertCreated();
+    }
+
+    public function test_create_existing_region(): void
+    {
+        $newName = Region::inRandomOrder()->first()->name;
+        
+        $data = [
+            'name' => $newName,
+        ];
+
+        $response = $this->postJson(route('region.store'), $data);
+        $response->assertConflict();
+    }
+
+    public function test_update_region_name_to_new(): void
     {
         $data = [
             'name' => $this->faker->randomElement(Regions::array()),
         ];
 
-
-        if(Region::where('name', $data['name'])->doesntExist()){
-            $waitForSuccess = true;
-        }else{
-            $waitForSuccess = false;
+        $nameExists = Region::where('name', $data['name'])->exists();
+        foreach (Regions::array() as $region) {
+            if(Region::where('name', $region)->doesntExist()){
+                $data['name'] = $region;
+                $nameExists = false;
+            }
         }
-        
-        $response = $this->postJson(route('region.store'), $data);
 
-        if($waitForSuccess){
-            $response->assertCreated();
-        }else{
-            $response->assertBadRequest();
+        if($nameExists){
+            $this->fail('All regions already exists');
         }
-    }
 
-    public function test_update_region(): void
+        $region = Region::inRandomOrder()->first();
+
+        $response = $this->patchJson(route('region.update', $region->id), $data);
+        $response->assertOk();
+
+    } 
+
+    public function test_update_region_name_to_existing(): void
     {
+        $newName = Region::inRandomOrder()->first()->name;
+        
         $data = [
-            'name' => $this->faker->randomElement(Regions::array()),
+            'name' => $newName,
         ];
 
         $region = Region::inRandomOrder()->first();
 
-        if(Region::where('name', $data['name'])->doesntExist()){
-            $waitForSuccess = true;
-        }else{
-            $waitForSuccess = false;
-        }
-
         $response = $this->patchJson(route('region.update', $region->id), $data);
-
-        if($waitForSuccess){
-            $response->assertOk();
-        }else{
-            $response->assertBadRequest();
-        }
+        $response->assertConflict();
     }
 
     public function test_get_all_regions(): void
@@ -69,7 +100,6 @@ class RegionTest extends TestCase
         $region = Region::inRandomOrder()->first();
 
         $response = $this->get(route('region.show', $region->id));
-
         $response->assertJson([
             'id' => $region->id,
             'name' => $region->name,
@@ -81,7 +111,6 @@ class RegionTest extends TestCase
         $region = Region::inRandomOrder()->first();
 
         $response = $this->deleteJson(route('region.destroy', $region->id));
-
         $response->assertNoContent();
     }
     

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRegionRequest;
 use App\Http\Requests\UpdateRegionRequest;
 use App\Models\Region;
+use App\Models\Location;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -30,7 +31,7 @@ class RegionController extends Controller
     public function store(StoreRegionRequest $request)
     {
         if(Region::where('name', $request->name)->exists()){
-            return response()->json(['message' => 'Already exists'], Response::HTTP_BAD_REQUEST);
+            return response()->json(['message' => 'Already exists'], Response::HTTP_CONFLICT);
         }
 
         $region = Region::create($request->validated());
@@ -51,7 +52,7 @@ class RegionController extends Controller
     public function update(UpdateRegionRequest $request, Region $region)
     {
         if(Region::where('name', $request->name)->exists()){
-            return response()->json(['message' => 'Already exists'], Response::HTTP_BAD_REQUEST);
+            return response()->json(['message' => 'Already exists'], Response::HTTP_CONFLICT);
         }
 
         $region->update($request->validated());
@@ -63,6 +64,9 @@ class RegionController extends Controller
      */
     public function destroy(Region $region)
     {
+        if(Location::where('region_id', $region->id)->exists()){
+            return response()->json(['message' => 'Linked locations found'], Response::HTTP_CONFLICT);
+        }
         $region->delete();
         return response()->noContent();
     }
