@@ -31,7 +31,7 @@ class RegionController extends Controller
     public function store(StoreRegionRequest $request)
     {
         if(Region::where('name', $request->name)->exists()){
-            return response()->json(['message' => 'Already exists'], Response::HTTP_CONFLICT);
+            return response()->json(['message' => 'Already exists'], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $region = Region::create($request->validated());
@@ -52,7 +52,7 @@ class RegionController extends Controller
     public function update(UpdateRegionRequest $request, Region $region)
     {
         if(Region::where('name', $request->name)->exists()){
-            return response()->json(['message' => 'Already exists'], Response::HTTP_CONFLICT);
+            return response()->json(['message' => 'Already exists'], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $region->update($request->validated());
@@ -65,7 +65,7 @@ class RegionController extends Controller
     public function destroy(Region $region)
     {
         if(Location::where('region_id', $region->id)->exists()){
-            return response()->json(['message' => 'Linked locations found'], Response::HTTP_CONFLICT);
+            return response()->json(['message' => 'Linked locations found'], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         $region->delete();
         return response()->noContent();

@@ -47,7 +47,7 @@ class RegionTest extends TestCase
         ];
 
         $response = $this->postJson(route('region.store'), $data);
-        $response->assertConflict();
+        $response->assertUnprocessable();
     }
 
     public function test_update_region_name_to_new(): void
@@ -86,7 +86,7 @@ class RegionTest extends TestCase
         $region = Region::inRandomOrder()->first();
 
         $response = $this->patchJson(route('region.update', $region->id), $data);
-        $response->assertConflict();
+        $response->assertUnprocessable();
     }
 
     public function test_get_all_regions(): void

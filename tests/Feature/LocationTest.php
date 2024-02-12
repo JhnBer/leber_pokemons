@@ -91,6 +91,6 @@ class LocationTest extends TestCase
             ->first();
 
         $response = $this->deleteJson(route('location.destroy', $location->id));
-        $response->assertConflict();
+        $response->assertUnprocessable();
     }
 }

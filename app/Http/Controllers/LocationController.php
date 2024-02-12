@@ -70,7 +70,7 @@ class LocationController extends Controller
     public function destroy(Location $location)
     {
         if(Location::where('parent_id', $location->id)->exists()){
-            return response()->json(['message' => 'This location used as parent location'], Response::HTTP_CONFLICT);
+            return response()->json(['message' => 'This location used as parent location'], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         
         $location->delete();
