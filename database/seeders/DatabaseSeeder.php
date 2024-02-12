@@ -3,6 +3,12 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\Ability;
+use App\Models\Region;
+use App\Enums\Regions;
+use App\Models\Location;
+use App\Models\Pokemon;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,11 +18,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        Ability::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        foreach(Regions::values() as $region){
+            Region::create([
+                'name' => $region
+            ]);
+        }
+
+        Location::factory(10)->create();
+        Location::factory(5)->withParent()->create(); 
+        Location::factory(5)->withParent()->create();
+
+        Pokemon::factory(10)->withAbilities()->create();
     }
 }
