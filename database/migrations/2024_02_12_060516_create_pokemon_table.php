@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('pokemon', function (Blueprint $table) {
             $table->id();
 
-            $table->string('name', 32);
+            $table->string('name', 32)->unique();
             $table->string('shape', 16);
             $table->integer('order');
             $table->string('image_url', 64);
