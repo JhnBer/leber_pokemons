@@ -23,6 +23,7 @@ return new class extends Migration
             $table->foreign('ability_id')->references('id')->on('abilities')->onDelete('cascade');
 
             $table->unique(['pokemon_id', 'ability_id']);
+            $table->unique(['ability_id', 'pokemon_id']);
 
         });
     }
