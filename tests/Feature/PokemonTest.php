@@ -61,4 +61,43 @@ class PokemonTest extends TestCase
         $response = $this->postJson(route('pokemon.store'), $data);
         $response->assertUnprocessable();
     }
+
+    public function test_update_pokemon_name(): void
+    {
+        $pokemon = Pokemon::inRandomOrder()->first();
+
+        $data = [
+            'name' => $this->faker->name(),
+        ];
+
+        $response = $this->patchJson(route('pokemon.update', $pokemon->id), $data);
+        $response->assertOk();
+    }
+
+    public function test_update_pokemon_shape(): void
+    {
+        $pokemon = Pokemon::inRandomOrder()->first();
+
+        $data = [
+            'shape' => $this->faker->randomElement(PokemonShapes::array()),
+        ];
+
+        $response = $this->patchJson(route('pokemon.update', $pokemon->id), $data);
+        $response->assertOk();
+    }
+
+    public function test_update_pokemon_image(): void
+    {
+        $pokemon = Pokemon::inRandomOrder()->first();
+
+        $data = [
+            'image' => UploadedFile::fake()->image('pokemon.jpeg'),
+        ];
+
+        $response = $this->patchJson(route('pokemon.update', $pokemon->id), $data);
+        $response->assertJsonFragment([
+            'image_url' => $data['image'],
+        ]);
+        $response->assertOk();
+    }
 }
