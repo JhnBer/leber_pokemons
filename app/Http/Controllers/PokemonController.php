@@ -51,7 +51,7 @@ class PokemonController extends Controller
      */
     public function show(Pokemon $pokemon)
     {
-        response()->json($pokemon, Response::HTTP_OK);
+        return response()->json($pokemon, Response::HTTP_OK);
     }
 
     /**
