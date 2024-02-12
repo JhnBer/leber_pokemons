@@ -8,6 +8,7 @@ use App\Models\Ability;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\File;
 
 class AbilityController extends Controller
 {
@@ -33,7 +34,7 @@ class AbilityController extends Controller
         $validated = $request->validated();
 
         $file = $request->file('image');
-        $filePath = $file->move(public_path('images'), $file->getClientOriginalName());
+        $filePath = $file->move(public_path('images/ability/'), uniqid().'.'.$file->getClientOriginalExtension());
         $validated['image_url'] = $filePath;
 
         $ability = Ability::create($validated);
@@ -58,8 +59,9 @@ class AbilityController extends Controller
 
         if($request->hasFile('image')){
             $file = $request->file('image');
-            $filePath = $file->move(public_path('images'), $file->getClientOriginalName());
+            $filePath = $file->move(public_path('images/ability/'), uniqid().'.'.$file->getClientOriginalExtension());
             $validated['image_url'] = $filePath;
+            File::delete($ability->image_url);
         }
 
         $ability->update($validated);
