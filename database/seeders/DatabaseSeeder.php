@@ -20,10 +20,12 @@ class DatabaseSeeder extends Seeder
     {
         Ability::factory(10)->create();
 
-        foreach(Regions::values() as $region){
-            Region::create([
-                'name' => $region
-            ]);
+        if(Region::all()->count() !== count(Regions::values())){
+            foreach(Regions::values() as $region){
+                Region::create([
+                    'name' => $region
+                ]);
+            }
         }
 
         Location::factory(10)->create();

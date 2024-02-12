@@ -8,6 +8,7 @@ use App\Models\Ability;
 use App\Models\Location;
 use App\Models\Pokemon;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Pokemon>
@@ -43,9 +44,7 @@ class PokemonFactory extends Factory
             for ($i=0; $i < rand(1, 2); $i++) { 
                 do {
                     $ability = Ability::inRandomOrder()->first();
-                } while (Pokemon::whereHas('abilities', function ($query) use ($ability) {
-                    $query->where('ability_id', $ability->id);
-                })->exists());
+                } while (DB::table('pokemon_ability')->where('pokemon_id', $pokemon->id)->where('ability_id', $ability->id)->exists());
                 $abilities[] = $ability->id;
             }
 
