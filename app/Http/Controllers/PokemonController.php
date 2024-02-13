@@ -11,6 +11,8 @@ use Spatie\QueryBuilder\QueryBuilder;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\AllowedSort;
 
 class PokemonController extends Controller
 {
@@ -21,6 +23,9 @@ class PokemonController extends Controller
     {
         $pokemons = QueryBuilder::for(Pokemon::class)
             ->with(['abilities', 'location', 'region'])
+            ->allowedFilters([
+                AllowedFilter::exact('region', 'region.name')
+            ])
             ->get();
         return response()->json($pokemons, Response::HTTP_OK);
     }
