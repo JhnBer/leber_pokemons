@@ -21,7 +21,7 @@ class LocationTest extends TestCase
             'region_id' => Region::inRandomOrder()->first()->id,
         ];
 
-        $response = $this->postJson(route('location.store'), $data);
+        $response = $this->postJson(route('locations.store'), $data);
 
         $response->assertCreated();
     }
@@ -33,7 +33,7 @@ class LocationTest extends TestCase
             'parent_id' => Location::inRandomOrder()->first()->id,
         ];
 
-        $response = $this->postJson(route('location.store'), $data);
+        $response = $this->postJson(route('locations.store'), $data);
         $response->assertCreated();
     }
 
@@ -45,7 +45,7 @@ class LocationTest extends TestCase
 
         $location = Location::inRandomOrder()->first();
 
-        $response = $this->patchJson(route('location.update', $location->id), $data);
+        $response = $this->patchJson(route('locations.update', $location->id), $data);
         $response->assertOk();
     }
 
@@ -58,7 +58,7 @@ class LocationTest extends TestCase
             'parent_id' => $locationParent->id,
         ];
 
-        $response = $this->patchJson(route('location.update', $location->id), $data);
+        $response = $this->patchJson(route('locations.update', $location->id), $data);
 
         $response->assertJsonFragment([
             'region_id' => $locationParent->region_id,
@@ -79,7 +79,7 @@ class LocationTest extends TestCase
 
         $usedAsPokemonLocation = Pokemon::where('location_id', $location->id)->exists();
 
-        $response = $this->deleteJson(route('location.destroy', $location->id));
+        $response = $this->deleteJson(route('locations.destroy', $location->id));
 
         if($usedAsPokemonLocation){
             $response->assertUnprocessable();
@@ -97,7 +97,7 @@ class LocationTest extends TestCase
             ->inRandomOrder()
             ->first();
 
-        $response = $this->deleteJson(route('location.destroy', $location->id));
+        $response = $this->deleteJson(route('locations.destroy', $location->id));
         $response->assertUnprocessable();
     }
 
@@ -111,7 +111,7 @@ class LocationTest extends TestCase
             ->inRandomOrder()
             ->first(); 
 
-        $response = $this->deleteJson(route('location.destroy', $location->id));
+        $response = $this->deleteJson(route('locations.destroy', $location->id));
         $response->assertUnprocessable();
     }
 }

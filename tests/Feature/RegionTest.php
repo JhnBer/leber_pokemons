@@ -34,7 +34,7 @@ class RegionTest extends TestCase
 
         $regionsCount = Region::all()->count();
 
-        $response = $this->postJson(route('region.store'), $data);
+        $response = $this->postJson(route('regions.store'), $data);
 
         if($regionsCount == count(Regions::array())){
             $response->assertUnprocessable();
@@ -51,7 +51,7 @@ class RegionTest extends TestCase
             'name' => $newName,
         ];
 
-        $response = $this->postJson(route('region.store'), $data);
+        $response = $this->postJson(route('regions.store'), $data);
         $response->assertUnprocessable();
     }
 
@@ -73,7 +73,7 @@ class RegionTest extends TestCase
 
         $regionsCount = Region::all()->count();
 
-        $response = $this->patchJson(route('region.update', $region->id), $data);
+        $response = $this->patchJson(route('regions.update', $region->id), $data);
 
         if($regionsCount == count(Regions::array())){
             $response->assertUnprocessable();
@@ -94,13 +94,13 @@ class RegionTest extends TestCase
 
         $region = Region::inRandomOrder()->first();
 
-        $response = $this->patchJson(route('region.update', $region->id), $data);
+        $response = $this->patchJson(route('regions.update', $region->id), $data);
         $response->assertUnprocessable();
     }
 
     public function test_get_all_regions(): void
     {
-        $response = $this->get(route('region.index'));
+        $response = $this->get(route('regions.index'));
         $response->assertOk();
     }
 
@@ -108,7 +108,7 @@ class RegionTest extends TestCase
     {
         $region = Region::inRandomOrder()->first();
 
-        $response = $this->get(route('region.show', $region->id));
+        $response = $this->get(route('regions.show', $region->id));
         $response->assertJson([
             'id' => $region->id,
             'name' => $region->name,
@@ -119,7 +119,7 @@ class RegionTest extends TestCase
     {
         $region = Region::inRandomOrder()->first();
 
-        $response = $this->deleteJson(route('region.destroy', $region->id));
+        $response = $this->deleteJson(route('regions.destroy', $region->id));
 
         if(Location::where('region_id', $region->id)->exists()){
             $response->assertUnprocessable();

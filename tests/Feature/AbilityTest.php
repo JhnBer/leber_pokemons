@@ -30,7 +30,7 @@ class AbilityTest extends TestCase
             'image' => UploadedFile::fake()->image('ability.jpg'),
         ];
 
-        $response = $this->postJson(route('ability.store'), $data);
+        $response = $this->postJson(route('abilities.store'), $data);
         $response->assertCreated();
     }
 
@@ -42,7 +42,7 @@ class AbilityTest extends TestCase
         
         $ability = Ability::inRandomOrder()->first();
 
-        $response = $this->patchJson(route('ability.update', $ability->id), $data);
+        $response = $this->patchJson(route('abilities.update', $ability->id), $data);
         $response->assertOk();
     }
 
@@ -54,7 +54,7 @@ class AbilityTest extends TestCase
         
         $ability = Ability::inRandomOrder()->first();
 
-        $response = $this->patchJson(route('ability.update', $ability->id), $data);
+        $response = $this->patchJson(route('abilities.update', $ability->id), $data);
         $response->assertOk();
     }
 
@@ -67,7 +67,7 @@ class AbilityTest extends TestCase
 
         $ability = Ability::inRandomOrder()->first();
 
-        $response = $this->patchJson(route('ability.update', $ability->id), $data);
+        $response = $this->patchJson(route('abilities.update', $ability->id), $data);
         $response->assertOk();
     }
 
@@ -79,13 +79,13 @@ class AbilityTest extends TestCase
 
         $ability = Ability::inRandomOrder()->first();
 
-        $response = $this->patchJson(route('ability.update', $ability->id), $data);
+        $response = $this->patchJson(route('abilities.update', $ability->id), $data);
         $response->assertOk();
     }
 
     public function test_get_all_abilities(): void
     {
-        $response = $this->get(route('ability.index'));
+        $response = $this->get(route('abilities.index'));
         $response->assertOk();
     }
 
@@ -93,7 +93,7 @@ class AbilityTest extends TestCase
     {
         $ability = Ability::inRandomOrder()->first();
 
-        $response = $this->deleteJson(route('ability.destroy', $ability->id));
+        $response = $this->deleteJson(route('abilities.destroy', $ability->id));
         $response->assertNoContent();
     }
 }

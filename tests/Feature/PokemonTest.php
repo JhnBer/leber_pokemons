@@ -34,7 +34,7 @@ class PokemonTest extends TestCase
             'image' => UploadedFile::fake()->image('pokemon.jpeg'),
         ];
 
-        $response = $this->postJson(route('pokemon.store'), $data);
+        $response = $this->postJson(route('pokemons.store'), $data);
         $response->assertCreated();
     }
 
@@ -58,7 +58,7 @@ class PokemonTest extends TestCase
             'image' => UploadedFile::fake()->image('pokemon.jpeg'),
         ];
 
-        $response = $this->postJson(route('pokemon.store'), $data);
+        $response = $this->postJson(route('pokemons.store'), $data);
         $response->assertUnprocessable();
     }
 
@@ -70,7 +70,7 @@ class PokemonTest extends TestCase
             'name' => $this->faker->name(),
         ];
 
-        $response = $this->patchJson(route('pokemon.update', $pokemon->id), $data);
+        $response = $this->patchJson(route('pokemons.update', $pokemon->id), $data);
         $response->assertOk();
     }
 
@@ -82,7 +82,7 @@ class PokemonTest extends TestCase
             'shape' => $this->faker->randomElement(PokemonShapes::array()),
         ];
 
-        $response = $this->patchJson(route('pokemon.update', $pokemon->id), $data);
+        $response = $this->patchJson(route('pokemons.update', $pokemon->id), $data);
         $response->assertOk();
     }
 
@@ -94,7 +94,7 @@ class PokemonTest extends TestCase
             'image' => UploadedFile::fake()->image('pokemon.jpeg'),
         ];
 
-        $response = $this->patchJson(route('pokemon.update', $pokemon->id), $data);
+        $response = $this->patchJson(route('pokemons.update', $pokemon->id), $data);
         $response->assertJsonFragment([
             'image_url' => $data['image'],
         ]);
