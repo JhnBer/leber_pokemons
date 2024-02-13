@@ -24,7 +24,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::prefix('ability')->name('ability.')->group(function () {
-    Route::apiResource('', AbilityController::class);
+    Route::apiResource('', AbilityController::class)->parameters([
+        '' => 'ability'
+    ]);
     Route::get('{ability}/image', [AbilityController::class, 'getImage'])->name('image');
 });
 
@@ -33,6 +35,8 @@ Route::apiResource('region', RegionController::class);
 Route::apiResource('location', LocationController::class);
 
 Route::prefix('pokemon')->name('pokemon.')->group(function () {
-    Route::apiResource('', PokemonController::class);
+    Route::apiResource('', PokemonController::class)->parameters([
+        '' => 'pokemon'
+    ]);
     Route::get('{pokemon}/image', [PokemonController::class, 'getImage'])->name('image');
 });
