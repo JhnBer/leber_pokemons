@@ -70,7 +70,7 @@ class PokemonFactory extends Factory
             $pokemonData = file_get_contents('https://pokeapi.co/api/v2/pokemon/' . $pokemonId);
             $pokemonData = json_decode($pokemonData);
             $image = file_get_contents($pokemonData->sprites->front_default);
-            // $new = Storage::disk('public')->put($pokemon->image_url, $image);
+            File::ensureDirectoryExists(public_path(config('media.images.pokemon')));  
             File::put(public_path($pokemon->image_url), $image);
         });
     }
