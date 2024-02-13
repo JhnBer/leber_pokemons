@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Location;
+use App\Models\Pokemon;
 
 class LocationTest extends TestCase
 {
@@ -76,9 +77,15 @@ class LocationTest extends TestCase
             ->inRandomOrder()
             ->first();
 
-        $response = $this->deleteJson(route('location.destroy', $location->id));
-        $response->assertNoContent();
+        $usedAsPokemonLocation = Pokemon::where('location_id', $location->id)->exists();
 
+        $response = $this->deleteJson(route('location.destroy', $location->id));
+
+        if($usedAsPokemonLocation){
+            $response->assertUnprocessable();
+        }else{
+            $response->assertNoContent();
+        }
     }
 
     public function test_destroy_parent_location(): void
