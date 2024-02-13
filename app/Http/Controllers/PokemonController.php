@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class PokemonController extends Controller
 {
@@ -31,8 +32,11 @@ class PokemonController extends Controller
         $validated = $request->validated();
 
         $file = $request->file('image');
-        $filePath = $file->move(public_path('images/pokemon/'), $file->getClientOriginalName());
-        $validated['image_url'] = $filePath;
+        $fileName = uniqid().'.'.$file->getClientOriginalExtension();
+        $filePath = config('media.images.pokemon');
+
+        $file->move(public_path($filePath), $fileName);
+        $validated['image_url'] = $filePath . $fileName;
 
         $pokemon = Pokemon::create($validated);
 
@@ -63,9 +67,13 @@ class PokemonController extends Controller
 
         if($request->hasFile('image')){
             $file = $request->file('image');
-            $filePath = $file->move(public_path('images/pokemon/'), uniqid().'.'.$file->getClientOriginalExtension());
-            $validated['image_url'] = $filePath;
-            File::delete($pokemon->image_url);
+            $fileName = uniqid().'.'.$file->getClientOriginalExtension();
+            $filePath = config('media.images.pokemon');
+
+            $file->move(public_path($filePath), $fileName);
+            $validated['image_url'] = $filePath . $fileName;
+
+            File::delete(public_path($pokemon->image_url));
         }
 
         if(isset($validated['abilities'])){

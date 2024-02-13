@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class AbilityController extends Controller
 {
@@ -30,12 +31,14 @@ class AbilityController extends Controller
      */
     public function store(StoreAbilityRequest $request)
     {
-
         $validated = $request->validated();
 
         $file = $request->file('image');
-        $filePath = $file->move(public_path('images/ability/'), uniqid().'.'.$file->getClientOriginalExtension());
-        $validated['image_url'] = $filePath;
+        $fileName = uniqid().'.'.$file->getClientOriginalExtension();
+        $filePath = config('media.images.ability');
+
+        $file->move(public_path($filePath), $fileName);
+        $validated['image_url'] = $filePath . $fileName;
 
         $ability = Ability::create($validated);
 
@@ -59,9 +62,13 @@ class AbilityController extends Controller
 
         if($request->hasFile('image')){
             $file = $request->file('image');
-            $filePath = $file->move(public_path('images/ability/'), uniqid().'.'.$file->getClientOriginalExtension());
-            $validated['image_url'] = $filePath;
-            File::delete($ability->image_url);
+            $fileName = uniqid().'.'.$file->getClientOriginalExtension();
+            $filePath = config('media.images.ability');
+
+            $file->move(public_path($filePath), $fileName);
+            $validated['image_url'] = $filePath . $fileName;
+            var_dump(public_path($ability->image_url));
+            File::delete(public_path($ability->image_url));
         }
 
         $ability->update($validated);
