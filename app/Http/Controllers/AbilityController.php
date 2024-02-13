@@ -67,7 +67,6 @@ class AbilityController extends Controller
 
             $file->move(public_path($filePath), $fileName);
             $validated['image_url'] = $filePath . $fileName;
-            var_dump(public_path($ability->image_url));
             File::delete(public_path($ability->image_url));
         }
 
