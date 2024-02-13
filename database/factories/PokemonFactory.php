@@ -9,6 +9,7 @@ use App\Models\Location;
 use App\Models\Pokemon;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Pokemon>
@@ -26,7 +27,7 @@ class PokemonFactory extends Factory
             'name' => $this->faker->name,
             'shape' => $this->faker->randomElement(PokemonShapes::array()),
             'location_id' => Location::inRandomOrder()->first()->id,
-            'image_url' => UploadedFile::fake()->image('pokemon.jpeg'),
+            'image_url' => config('media.images.pokemon') . uniqid() . '.png',
         ];
     }
 
@@ -52,6 +53,25 @@ class PokemonFactory extends Factory
             }
 
             $pokemon->abilities()->attach($abilities);
+        });
+    }
+
+    public function withImages()
+    {
+        return $this->state(function (array $attributes){
+            return [
+                'name' => $attributes['name'],
+                'shape' => $attributes['shape'],
+                'location_id' => $attributes['location_id'],
+                'image_url' => $attributes['image_url'],
+            ];
+        })->afterCreating(function (Pokemon $pokemon) {
+            $pokemonId = mt_rand(1, 1025);
+            $pokemonData = file_get_contents('https://pokeapi.co/api/v2/pokemon/' . $pokemonId);
+            $pokemonData = json_decode($pokemonData);
+            $image = file_get_contents($pokemonData->sprites->front_default);
+            // $new = Storage::disk('public')->put($pokemon->image_url, $image);
+            File::put(public_path($pokemon->image_url), $image);
         });
     }
 

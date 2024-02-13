@@ -18,7 +18,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Ability::factory(10)->create();
+        Ability::factory(10)
+            ->withImages()
+            ->create();
 
         if(Region::all()->count() !== count(Regions::values())){
             foreach(Regions::values() as $region){
@@ -35,6 +37,7 @@ class DatabaseSeeder extends Seeder
         Pokemon::factory(10)
             ->withOrder()
             ->withAbilities()
+            ->withImages()
             ->create();
     }
 }
