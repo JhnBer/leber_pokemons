@@ -93,4 +93,18 @@ class LocationTest extends TestCase
         $response = $this->deleteJson(route('location.destroy', $location->id));
         $response->assertUnprocessable();
     }
+
+    public function test_destroy_location_used_in_pokemons(): void
+    {
+        $location = Location::whereIn('id', function ($query) {
+                $query->select('location_id')
+                    ->from('pokemons')
+                    ->whereNotNull('location_id');
+        })
+            ->inRandomOrder()
+            ->first(); 
+
+        $response = $this->deleteJson(route('location.destroy', $location->id));
+        $response->assertUnprocessable();
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreLocationRequest;
 use App\Http\Requests\UpdateLocationRequest;
 use App\Models\Location;
+use App\Models\Pokemon;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -78,6 +79,10 @@ class LocationController extends Controller
     {
         if(Location::where('parent_id', $location->id)->exists()){
             return response()->json(['message' => 'This location used as parent location'], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        if(Pokemon::where('location_id', $location->id)->exists()){
+            return response()->json(['message' => 'This location is set as pokemon location'], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         
         $location->delete();
