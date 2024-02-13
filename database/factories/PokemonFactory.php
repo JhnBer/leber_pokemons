@@ -44,7 +44,10 @@ class PokemonFactory extends Factory
             for ($i=0; $i < rand(1, 2); $i++) { 
                 do {
                     $ability = Ability::inRandomOrder()->first();
-                } while (DB::table('pokemon_ability')->where('pokemon_id', $pokemon->id)->where('ability_id', $ability->id)->exists());
+                } while (
+                    DB::table('pokemon_ability')->where('pokemon_id', $pokemon->id)->where('ability_id', $ability->id)->exists() ||
+                    in_array($ability->id, $abilities)
+                );
                 $abilities[] = $ability->id;
             }
 
