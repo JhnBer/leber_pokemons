@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePokemonRequest;
 use App\Http\Requests\UpdatePokemonRequest;
+use App\Models\Location;
 use App\Models\Pokemon;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -19,7 +20,7 @@ class PokemonController extends Controller
     public function index()
     {
         $pokemons = QueryBuilder::for(Pokemon::class)
-            ->with(['abilities'])
+            ->with(['abilities', 'location', 'region'])
             ->get();
         return response()->json($pokemons, Response::HTTP_OK);
     }
@@ -55,6 +56,10 @@ class PokemonController extends Controller
      */
     public function show(Pokemon $pokemon)
     {
+        $pokemon = QueryBuilder::for(Pokemon::class)
+                ->with(['abilities', 'location', 'region'])
+                ->find($pokemon->id);
+
         return response()->json($pokemon, Response::HTTP_OK);
     }
 
