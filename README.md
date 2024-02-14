@@ -50,11 +50,11 @@ php artisan db:seed
 
 ## Фильтрация и сортировка
 
-- Реализована фильтрация покемонов по имени региона (/api/pokemon/?filter[region]=volcano)
-- Фильтрация локаций по региону (/api/location/?filter\[region.name]=volcano)
-- Сортировка локаций по региону (/api/location/?sort=region)
-- Сортировка регионов по имени (/api/region/?sort=name)
-- Сортирока способностей по имени (/api/ability/?sort=name) / (/api/ability/?sort=name_ru)
+- Реализована фильтрация покемонов по имени региона (/api/pokemons/?filter[region]=volcano)
+- Фильтрация локаций по региону (/api/locations/?filter\[region.name]=volcano)
+- Сортировка локаций по региону (/api/locations/?sort=region)
+- Сортировка регионов по имени (/api/regions/?sort=name)
+- Сортирока способностей по имени (/api/abilities/?sort=name) / (/api/ability/?sort=name_ru)
 
 
 
