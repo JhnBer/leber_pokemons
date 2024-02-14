@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreAbilityRequest;
 use App\Http\Requests\UpdateAbilityRequest;
+use App\Http\Resources\AbilityResource;
 use App\Models\Ability;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -23,7 +24,7 @@ class AbilityController extends Controller
             ->allowedSorts(['id', 'name', 'name_ru'])
             ->get();
 
-        return response()->json($abilities, Response::HTTP_OK);
+        return response()->json(AbilityResource::collection($abilities), Response::HTTP_OK);
     }
 
     /**
@@ -50,7 +51,7 @@ class AbilityController extends Controller
      */
     public function show(Ability $ability)
     {
-        return response()->json($ability, Response::HTTP_OK);
+        return response()->json(new AbilityResource($ability), Response::HTTP_OK);
     }
 
     /**
@@ -71,7 +72,7 @@ class AbilityController extends Controller
         }
 
         $ability->update($validated);
-        return response($ability, Response::HTTP_OK);
+        return response(new AbilityResource($ability), Response::HTTP_OK);
     }
 
     /**

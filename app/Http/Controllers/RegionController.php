@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreRegionRequest;
 use App\Http\Requests\UpdateRegionRequest;
+use App\Http\Resources\RegionResource;
 use App\Models\Region;
 use App\Models\Location;
 use Illuminate\Http\Request;
@@ -22,7 +23,7 @@ class RegionController extends Controller
             ->allowedSorts(['id', 'name'])
             ->get();
 
-        return response()->json($regions, Response::HTTP_OK);
+        return response()->json(RegionResource::collection($regions), Response::HTTP_OK);
     }
 
     /**
@@ -56,7 +57,7 @@ class RegionController extends Controller
         }
 
         $region->update($request->validated());
-        return response()->json($region, Response::HTTP_OK);
+        return response()->json(new RegionResource($region), Response::HTTP_OK);
     }
 
     /**

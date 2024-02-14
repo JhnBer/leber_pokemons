@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePokemonRequest;
 use App\Http\Requests\UpdatePokemonRequest;
+use App\Http\Resources\PokemonResource;
 use App\Models\Location;
 use App\Models\Pokemon;
 use Illuminate\Http\Request;
@@ -27,7 +28,7 @@ class PokemonController extends Controller
                 AllowedFilter::exact('region', 'region.name')
             ])
             ->get();
-        return response()->json($pokemons, Response::HTTP_OK);
+        return response()->json(PokemonResource::collection($pokemons), Response::HTTP_OK);
     }
 
     /**
@@ -53,7 +54,7 @@ class PokemonController extends Controller
         $pokemon->order = $pokemon->id;
         $pokemon->save();
 
-        return response()->json($pokemon, Response::HTTP_CREATED);
+        return response()->json(new PokemonResource($pokemon), Response::HTTP_CREATED);
     }
 
     /**
@@ -65,7 +66,7 @@ class PokemonController extends Controller
                 ->with(['abilities', 'location', 'region'])
                 ->find($pokemon->id);
 
-        return response()->json($pokemon, Response::HTTP_OK);
+        return response()->json(new PokemonResource($pokemon), Response::HTTP_OK);
     }
 
     /**
@@ -92,7 +93,7 @@ class PokemonController extends Controller
         }
 
         $pokemon->update($validated);
-        return response()->json($pokemon, Response::HTTP_OK);
+        return response()->json(new PokemonResource($pokemon), Response::HTTP_OK);
     }
 
     /**

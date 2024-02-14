@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreLocationRequest;
 use App\Http\Requests\UpdateLocationRequest;
+use App\Http\Resources\LocationResource;
 use App\Models\Location;
 use App\Models\Pokemon;
 use Illuminate\Http\Request;
@@ -31,7 +32,7 @@ class LocationController extends Controller
                 ])
             ->get();
 
-        return response()->json($regions, Response::HTTP_OK);
+        return response()->json(LocationResource::collection($regions), Response::HTTP_OK);
     }
 
     /**
@@ -45,7 +46,7 @@ class LocationController extends Controller
             $validated['region_id'] = $parentLocation->region_id;
         }
         $location = Location::create($validated);
-        return response($location, Response::HTTP_CREATED);
+        return response(new LocationResource($location), Response::HTTP_CREATED);
     }
 
     /**
@@ -53,7 +54,7 @@ class LocationController extends Controller
      */
     public function show(Location $location)
     {
-        return response()->json($location, Response::HTTP_OK);
+        return response()->json(new LocationResource($location), Response::HTTP_OK);
     }
 
     /**
@@ -69,7 +70,7 @@ class LocationController extends Controller
             }
         }
         $location->update($validated);
-        return response()->json($location, Response::HTTP_OK);
+        return response()->json(new LocationResource($location), Response::HTTP_OK);
     }
 
     /**
